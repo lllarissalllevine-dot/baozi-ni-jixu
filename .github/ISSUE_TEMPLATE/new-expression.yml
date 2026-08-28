@@ -1,0 +1,45 @@
+name: New expression
+description: 提交一个需要理解或验证的中文网络表达
+title: "[Expression]: "
+body:
+  - type: input
+    id: expression
+    attributes:
+      label: 表达
+      description: 填写词语或短句，不要附带私人账号信息。
+    validations:
+      required: true
+  - type: textarea
+    id: meaning
+    attributes:
+      label: 你理解的含义
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 语境、对象和方向
+      description: 谁对谁说，在夸、损、回击还是自嘲？
+    validations:
+      required: true
+  - type: textarea
+    id: good_bad
+    attributes:
+      label: 适合与不适合的场景
+  - type: dropdown
+    id: permission
+    attributes:
+      label: 建议权限
+      options:
+        - 只帮助理解
+        - 允许跟随用户使用
+        - 允许 Agent 主动使用
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私确认
+      options:
+        - label: 我没有提交私人聊天截图、账号或可识别个人的信息。
+          required: true

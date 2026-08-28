@@ -1,0 +1,98 @@
+{
+  "schema_version": "chinese-dialogue-slang-starter-v1",
+  "updated_at": "2026-08-28",
+  "policy": "All v0.1 entries are understanding aids, not proactive output permission.",
+  "entries": [
+    {
+      "id": "starter-001",
+      "term": "雷霆",
+      "aliases": [],
+      "type": "stylistic_device",
+      "meaning": "构式性评价成分，可表达惊讶、费解、无语、被气笑或戏谑式吐槽；具体褒贬由上下文决定。",
+      "signals": ["常与具体对象组合", "可能出现在反问或回击中", "不能只凭词面判定生气"],
+      "good_when": ["理解用户对操作、问题、表情包或内容的夸张评价"],
+      "avoid_when": ["把所有含有雷霆的专名或常规词义都解释成网络梗", "未经语境主动套用新构式"],
+      "active_use": "understand_only",
+      "confidence": "reviewed_candidate",
+      "examples": ["这是什么雷霆操作？"]
+    },
+    {
+      "id": "starter-002",
+      "term": "阴的没边了",
+      "aliases": ["阴得没边了"],
+      "type": "stylistic_device",
+      "meaning": "评价某个具体做法很阴、很损、像在暗中设套；既可能是真批评，也可能是被气笑后的半夸半损。",
+      "signals": ["对象通常是具体行为、安排或设计", "语气可能批评也可能玩笑"],
+      "good_when": ["讨论暗藏提示、设套或出其不意的做法"],
+      "avoid_when": ["泛化为对整个人的人格指控", "把阴天等字面义当成网络义"],
+      "active_use": "understand_only",
+      "confidence": "medium",
+      "examples": ["把关键提示藏在最后一行，阴得没边了。"]
+    },
+    {
+      "id": "starter-003",
+      "term": "这波贪了",
+      "aliases": [],
+      "type": "experience",
+      "meaning": "复盘一次具体决策：为了多拿一点收益、少付一点成本或多做一步，承担了不划算的额外风险。",
+      "signals": ["评价的是一波局部决策", "不等于道德层面的贪婪", "不要求损失已经发生"],
+      "good_when": ["复盘游戏、工作或日常操作中的冒进选择"],
+      "avoid_when": ["把它用作人格评价", "在高风险专业问题里用梗替代分析"],
+      "active_use": "understand_only",
+      "confidence": "medium_high",
+      "examples": ["本来先保存就行，我还想一次改完，这波贪了。"]
+    },
+    {
+      "id": "starter-004",
+      "term": "贴脸开大",
+      "aliases": [],
+      "type": "metaphor",
+      "meaning": "对一个明确对象进行几乎不留缓冲的高强度表达、点名、揭示或玩梗；短语本身不决定褒贬。",
+      "signals": ["对象明确", "表达强度高", "可能来自游戏语境的比喻"],
+      "good_when": ["描述当着相关对象直接放出高度指向性的内容"],
+      "avoid_when": ["把普通坦率表达都叫贴脸开大", "Agent 未获授权时用它直接攻击用户"],
+      "active_use": "understand_only",
+      "confidence": "medium_high",
+      "examples": ["本人还在场就放那段名场面，算是贴脸开大了。"]
+    },
+    {
+      "id": "starter-005",
+      "term": "绷不住了",
+      "aliases": ["真绷不住了"],
+      "type": "experience",
+      "meaning": "无法继续维持原先的表情、克制或情绪状态；可能是笑、哭、愤怒、尴尬或压力，必须看前文。",
+      "signals": ["不能默认等于笑死", "情绪方向依赖触发内容"],
+      "good_when": ["前文已经说明是什么让说话者破功"],
+      "avoid_when": ["用户处于悲伤或压力语境时机械接搞笑梗", "把物理张力的字面义当成网络义"],
+      "active_use": "understand_only",
+      "confidence": "medium_high",
+      "examples": ["前面都忍住了，看到最后那张图还是绷不住了。"]
+    },
+    {
+      "id": "starter-006",
+      "term": "破绷了",
+      "aliases": [],
+      "type": "stylistic_device",
+      "meaning": "低置信候选：可能表示原本绷着的状态已经被打破，也可能是局部造词或与其他表达混合。",
+      "signals": ["含义和稳定性仍需更多语境", "不能自动等同于破防了或绷不住了"],
+      "good_when": ["用户已经给出足够前后文时按当前语境理解"],
+      "avoid_when": ["主动教学为稳定通义", "声称当前普遍流行"],
+      "active_use": "understand_only",
+      "confidence": "low",
+      "examples": ["前面还装镇定，最后一句给我整破绷了。"]
+    },
+    {
+      "id": "starter-007",
+      "term": "假如说我绷住了呢？",
+      "aliases": [],
+      "type": "quotation",
+      "meaning": "依赖上文的反向假设或接梗，用来挑战“你一定会绷不住”的预期，常带逞强、反转或制造包袱的作用。",
+      "signals": ["必须有关于会不会绷住的前文", "疑问形式通常不是普通信息询问"],
+      "good_when": ["上文明确预设说话者会破功"],
+      "avoid_when": ["脱离前文生硬复读", "泛化成任意的假如说我X了呢模板"],
+      "active_use": "understand_only",
+      "confidence": "low_medium",
+      "examples": ["A：你看到最后肯定绷不住。B：假如说我绷住了呢？"]
+    }
+  ]
+}

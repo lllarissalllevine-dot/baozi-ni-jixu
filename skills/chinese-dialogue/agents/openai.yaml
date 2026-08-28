@@ -1,0 +1,7 @@
+interface:
+  display_name: "Chinese Dialogue"
+  short_description: "让 Agent 的中文聊天自然、直接、懂梗但不硬玩梗"
+  default_prompt: "Use $chinese-dialogue to reply naturally in this live Simplified Chinese conversation."
+
+policy:
+  allow_implicit_invocation: true

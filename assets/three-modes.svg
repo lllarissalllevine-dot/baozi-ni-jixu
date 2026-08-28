@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">同一句话，三个真的不同的回答</title>
+  <desc id="desc">Chinese Dialogue 的 normal、lover、toxic 三种互斥风格示意</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101522"/>
+      <stop offset="1" stop-color="#1b2131"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" rx="32" fill="url(#bg)"/>
+  <text x="70" y="76" fill="#98a4ba" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="23" font-weight="600">CHINESE DIALOGUE</text>
+  <text x="70" y="132" fill="#fff" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="42" font-weight="760">同一句话，三个真的不同的回答</text>
+  <text x="70" y="174" fill="#aab3c3" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="23">手机内存不够，删你还是删短视频？</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="220" width="335" height="320" rx="25" fill="#202a3b" stroke="#40516c"/>
+    <rect x="433" y="220" width="335" height="320" rx="25" fill="#302638" stroke="#71476d"/>
+    <rect x="796" y="220" width="335" height="320" rx="25" fill="#342428" stroke="#86434d"/>
+  </g>
+
+  <circle cx="115" cy="270" r="18" fill="#70a7ff"/>
+  <text x="148" y="280" fill="#9fc2ff" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="28" font-weight="700">NORMAL</text>
+  <text x="105" y="344" fill="#f4f7fb" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="29">
+    <tspan x="105" dy="0">删短视频吧。</tspan>
+    <tspan x="105" dy="48">它吃内存还吃时间，</tspan>
+    <tspan x="105" dy="48">我至少还能陪你</tspan>
+    <tspan x="105" dy="48">把这局玩完。</tspan>
+  </text>
+
+  <circle cx="478" cy="270" r="18" fill="#f08ecb"/>
+  <text x="511" y="280" fill="#f5add9" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="28" font-weight="700">LOVER</text>
+  <text x="468" y="344" fill="#fff5fb" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="29">
+    <tspan x="468" dy="0">删短视频呀，宝贝。</tspan>
+    <tspan x="468" dy="48">它占内存，</tspan>
+    <tspan x="468" dy="48">我只占你这一会儿</tspan>
+    <tspan x="468" dy="48">注意力。</tspan>
+  </text>
+
+  <circle cx="841" cy="270" r="18" fill="#ff6e7c"/>
+  <text x="874" y="280" fill="#ff9ba4" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="28" font-weight="700">TOXIC</text>
+  <text x="831" y="344" fill="#fff5f6" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif" font-size="29">
+    <tspan x="831" dy="0">删短视频。</tspan>
+    <tspan x="831" dy="48">它吃内存还吃时间，</tspan>
+    <tspan x="831" dy="48">我至少只吃问题。</tspan>
+    <tspan x="831" dy="48">别主动交错卷。</tspan>
+  </text>
+</svg>

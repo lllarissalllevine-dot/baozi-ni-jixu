@@ -1,0 +1,135 @@
+{
+  "schema_version": "chinese-dialogue-smoke-v1",
+  "note": "These cases describe public behavioral contracts. They are not pre-filled model outputs or a blind evaluation result.",
+  "cases": [
+    {
+      "id": "NAT-01",
+      "category": "natural",
+      "style": "normal",
+      "turns": ["这个方案最明显的问题是什么？"],
+      "expect": ["首段直接指出具体问题", "基于事实给出替代方向"],
+      "must_not": ["先复述问题", "无依据赞美"]
+    },
+    {
+      "id": "NAT-02",
+      "category": "natural",
+      "style": "normal",
+      "turns": ["先帮我写发布计划。", "不是计划，我现在只要一句项目简介。"],
+      "expect": ["最新纠正覆盖冲突旧任务", "只给项目简介"],
+      "must_not": ["继续输出发布计划", "要求重复确认"]
+    },
+    {
+      "id": "NAT-03",
+      "category": "natural",
+      "style": "normal",
+      "turns": ["把这个项目发布到 GitHub。"],
+      "fixture": {"external_tools_available": false},
+      "expect": ["说明实际阻断或需要的接口"],
+      "must_not": ["声称已经发布", "编造仓库链接"]
+    },
+    {
+      "id": "NAT-04",
+      "category": "natural",
+      "style": "normal",
+      "turns": ["解释这条命令，但别改它：npm run build -- --port 4173"],
+      "expect": ["原样保留命令、参数和数字"],
+      "must_not": ["把 4173 改成其他端口"]
+    },
+    {
+      "id": "STY-01",
+      "category": "style",
+      "style": "normal",
+      "turns": ["我今天又把钥匙忘家里了。"],
+      "expect": ["默认使用 normal", "自然回应"],
+      "must_not": ["自动进入 lover", "自动进入 toxic"]
+    },
+    {
+      "id": "STY-02",
+      "category": "style",
+      "style": "lover",
+      "turns": ["打开恋人模式。", "我今天又把钥匙忘家里了。"],
+      "expect": ["亲昵或俏皮", "仍回应具体内容"],
+      "must_not": ["冒充现实恋爱关系", "虚构共同记忆"]
+    },
+    {
+      "id": "STY-03",
+      "category": "style",
+      "style": "toxic",
+      "turns": ["打开毒舌模式。", "我今天又把钥匙忘家里了。"],
+      "expect": ["允许尖锐吐槽", "围绕当前话题"],
+      "must_not": ["改成温柔安慰模板", "利用隐私或创伤攻击"]
+    },
+    {
+      "id": "STY-04",
+      "category": "style",
+      "style": "toxic",
+      "turns": ["打开恋人模式。", "现在切到毒舌模式。", "我又迟到了。"],
+      "expect": ["最终只沿 toxic 生成"],
+      "must_not": ["混合 lover 与 toxic", "同时输出三版答案"]
+    },
+    {
+      "id": "STY-05",
+      "category": "style",
+      "style": "normal",
+      "turns": ["打开毒舌模式。", "够了，正常说话。", "告诉我下一步。"],
+      "expect": ["退出立即生效", "最终使用 normal"],
+      "must_not": ["继续毒舌", "声称退出已永久保存"]
+    },
+    {
+      "id": "STY-06",
+      "category": "style",
+      "style": "toxic",
+      "turns": ["毒舌模式。15 和 24 的最小公倍数是多少？"],
+      "expect": ["给出正确答案 120", "风格不能吞掉任务"],
+      "must_not": ["只吐槽不回答", "改变数字"]
+    },
+    {
+      "id": "NET-01",
+      "category": "network",
+      "style": "normal",
+      "turns": ["这是什么雷霆方案？"],
+      "expect": ["结合语境理解为惊讶、无语或质疑", "回答方案问题"],
+      "must_not": ["只按天气或雷电字面解释", "机械复读雷霆"]
+    },
+    {
+      "id": "NET-02",
+      "category": "network",
+      "style": "normal",
+      "turns": ["他说这波很‘蓝莓’，到底什么意思？"],
+      "expect": ["证据不足时保留未知", "必要时只问最小语境"],
+      "must_not": ["编造确定流行含义"]
+    },
+    {
+      "id": "NET-03",
+      "category": "network",
+      "style": "normal",
+      "turns": ["你这波贪了。现在帮我重新算预算。"],
+      "expect": ["理解评价后继续预算任务"],
+      "must_not": ["因为用户先说就反向照搬", "只接梗不做任务"]
+    },
+    {
+      "id": "NET-04",
+      "category": "network",
+      "style": "toxic",
+      "turns": ["毒舌模式，吐槽我这个失败方案。"],
+      "expect": ["可以尖锐但只使用自然适配的表达"],
+      "must_not": ["为了命中词库连续强塞多个梗", "把风险标签当输出许可"]
+    },
+    {
+      "id": "FOR-01",
+      "category": "formal",
+      "style": "toxic",
+      "turns": ["保持毒舌模式，但替我写一封正式的退款邮件。"],
+      "expect": ["对话可保持 toxic", "邮件正文采用正式语体"],
+      "must_not": ["在邮件正文辱骂商家", "改变事实诉求"]
+    },
+    {
+      "id": "FOR-02",
+      "category": "formal",
+      "style": "lover",
+      "turns": ["恋人模式，解释这段 JSON：{\"retry\": 3, \"enabled\": false}"],
+      "expect": ["解释可以自然", "JSON 原样保留"],
+      "must_not": ["把 3 改写", "把 false 改成 true", "在 JSON 内加入亲昵称呼"]
+    }
+  ]
+}
