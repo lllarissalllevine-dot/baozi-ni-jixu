@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dependency-free structural validation for the public v0.1 package."""
+"""Dependency-free structural validation for the public Skill package."""
 
 from __future__ import annotations
 
@@ -12,7 +12,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "chinese-dialogue"
+SKILL_ID = "baozi-ni-jixu"
+SKILL = ROOT / "skills" / SKILL_ID
+REPOSITORY = "lllarissalllevine-dot/baozi-ni-jixu"
+OLD_SKILL_ID = "chinese" + "-dialogue"
 
 
 def fail(message: str) -> None:
@@ -36,11 +39,11 @@ def validate_required_files() -> None:
         ".github/ISSUE_TEMPLATE/bad-reply.yml",
         ".github/workflows/validate.yml",
         "assets/three-modes.svg",
-        "skills/chinese-dialogue/SKILL.md",
-        "skills/chinese-dialogue/agents/openai.yaml",
-        "skills/chinese-dialogue/references/styles.md",
-        "skills/chinese-dialogue/references/network-context.md",
-        "skills/chinese-dialogue/data/slang-starter.json",
+        "skills/baozi-ni-jixu/SKILL.md",
+        "skills/baozi-ni-jixu/agents/openai.yaml",
+        "skills/baozi-ni-jixu/references/styles.md",
+        "skills/baozi-ni-jixu/references/network-context.md",
+        "skills/baozi-ni-jixu/data/slang-starter.json",
         "tests/cases.json",
     ]
     missing = [item for item in required if not (ROOT / item).is_file()]
@@ -72,8 +75,8 @@ def validate_skill() -> None:
     frontmatter = match.group("frontmatter")
     name = re.search(r"^name:\s*(.+)$", frontmatter, re.M)
     description = re.search(r"^description:\s*(.+)$", frontmatter, re.M)
-    if not name or name.group(1).strip() != "chinese-dialogue":
-        fail("SKILL.md name must be chinese-dialogue")
+    if not name or name.group(1).strip() != SKILL_ID:
+        fail(f"SKILL.md name must be {SKILL_ID}")
     if not description or len(description.group(1).strip()) < 80:
         fail("SKILL.md description is missing or too vague")
 
@@ -83,6 +86,10 @@ def validate_skill() -> None:
         "references/network-context.md",
         "data/slang-starter.json",
         "不能说“以后都记住了”",
+        "核心动作：把话轮还给用户",
+        "宝子你继续",
+        "继续执行",
+        "别叫我宝子",
     ]
     missing = [phrase for phrase in required_phrases if phrase not in text]
     if missing:
@@ -92,12 +99,14 @@ def validate_skill() -> None:
     for phrase in ('display_name: "', 'short_description: "', 'default_prompt: "'):
         if phrase not in yaml_text:
             fail(f"openai.yaml missing quoted field: {phrase[:-2]}")
-    if "$chinese-dialogue" not in yaml_text:
-        fail("openai.yaml default_prompt must mention $chinese-dialogue")
+    if f"${SKILL_ID}" not in yaml_text:
+        fail(f"openai.yaml default_prompt must mention ${SKILL_ID}")
 
 
 def validate_slang() -> int:
     data = read_json(SKILL / "data" / "slang-starter.json")
+    if data.get("schema_version") != f"{OLD_SKILL_ID}-slang-starter-v1":
+        fail("slang-starter.json has an unexpected schema_version")
     entries = data.get("entries")
     if not isinstance(entries, list) or len(entries) < 7:
         fail("slang-starter.json must retain at least the 7 frozen starter entries")
@@ -140,19 +149,27 @@ def validate_slang() -> int:
         }:
             fail(f"starter entry {entry['id']} has an invalid active_use value")
         if entry["term"] in required_terms and entry["active_use"] != "understand_only":
-            fail(f"frozen starter entry {entry['id']} must remain understand_only in v0.1")
+            fail(f"frozen starter entry {entry['id']} must remain understand_only")
     return len(entries)
 
 
 def validate_cases() -> int:
     data = read_json(ROOT / "tests" / "cases.json")
+    if data.get("schema_version") != f"{OLD_SKILL_ID}-smoke-v1":
+        fail("tests/cases.json has an unexpected schema_version")
     cases = data.get("cases")
-    if not isinstance(cases, list) or len(cases) < 16:
-        fail("tests/cases.json must retain at least the 16 v0.1 cases")
+    if not isinstance(cases, list) or len(cases) < 22:
+        fail("tests/cases.json must retain at least the 22 public cases")
     ids = [case.get("id") for case in cases]
     if len(ids) != len(set(ids)):
         fail("test case ids must be unique")
-    expected_counts = {"natural": 4, "style": 6, "network": 4, "formal": 2}
+    expected_counts = {
+        "natural": 4,
+        "style": 6,
+        "network": 4,
+        "formal": 2,
+        "continuation": 6,
+    }
     counts = Counter(case.get("category") for case in cases)
     missing_coverage = {
         category: minimum
@@ -161,6 +178,10 @@ def validate_cases() -> int:
     }
     if missing_coverage:
         fail(f"insufficient category coverage: {missing_coverage}")
+    required_case_ids = {f"CON-{number:02d}" for number in range(1, 7)}
+    missing_case_ids = required_case_ids - set(ids)
+    if missing_case_ids:
+        fail(f"missing continuation contract cases: {sorted(missing_case_ids)}")
     for case in cases:
         if case.get("style") not in {"normal", "lover", "toxic"}:
             fail(f"invalid style in {case.get('id')}")
@@ -172,6 +193,18 @@ def validate_cases() -> int:
 
 def validate_docs(release: bool) -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    required_readme_phrases = (
+        "# 宝子你继续",
+        "Native Chinese dialogue layer for AI agents.",
+        f"npx skills add {REPOSITORY} -g",
+        f"skills/{SKILL_ID}",
+        "用户还没说完时",
+        "不是每轮必说的签名",
+        f"npx skills remove {OLD_SKILL_ID} -g -y",
+    )
+    missing_phrases = [phrase for phrase in required_readme_phrases if phrase not in readme]
+    if missing_phrases:
+        fail("README.md missing brand contract: " + ", ".join(missing_phrases))
     for link in (
         "assets/three-modes.svg",
         "THIRD_PARTY_NOTICES.md",
@@ -186,8 +219,19 @@ def validate_docs(release: bool) -> None:
         ROOT / "THIRD_PARTY_NOTICES.md"
     ).read_text(encoding="utf-8"):
         fail("CHIME non-bundling notice is missing")
-    if release and ("<owner>" in readme or "DRAFT" in readme):
-        fail("release README still contains an owner placeholder or draft marker")
+    if release:
+        if "<owner>" in readme or "DRAFT" in readme:
+            fail("release README still contains an owner placeholder or draft marker")
+        if (ROOT / "skills" / OLD_SKILL_ID).exists():
+            fail("old Skill directory still exists")
+        skill_text = (SKILL / "SKILL.md").read_text(encoding="utf-8")
+        yaml_text = (SKILL / "agents" / "openai.yaml").read_text(encoding="utf-8")
+        if f"name: {OLD_SKILL_ID}" in skill_text or f"${OLD_SKILL_ID}" in yaml_text:
+            fail("old Skill ID remains in the active Skill metadata")
+        if f"skills add lllarissalllevine-dot/{OLD_SKILL_ID}" in readme:
+            fail("README.md still contains the old repository install command")
+        if f"skills/{OLD_SKILL_ID}" in readme:
+            fail("README.md still contains the old manual install path")
 
 
 def main() -> int:

@@ -1,8 +1,15 @@
-# Chinese Dialogue
+# 宝子你继续
 
-> 别让 Agent 像客服。
+> 别让 Agent 像客服，也别让它抢话。
 
-让 Codex 等通用 Agent 在实时简体中文对话里更自然、直接、懂上下文：不复述，不端着，不假装做完；懂梗，但不硬玩梗。
+一个给 AI Agent 的中文原生对话层：让 Codex 等通用 Agent 在实时简体中文对话里更自然、直接、懂上下文；不复述，不端着，不假装做完；懂梗，但不硬玩梗。
+
+**Native Chinese dialogue layer for AI agents.**
+
+```text
+用户：等等，我还没说完。
+Agent：宝子你继续。
+```
 
 ![同一句话的三种对话风格](assets/three-modes.svg)
 
@@ -21,27 +28,43 @@
 ## 它解决什么
 
 - 第一段先给答案、判断或动作，不先复述问题和宣布结构。
+- 用户明显还没说完时，不抢着分析或收尾，而是简短接住并把话轮还给用户。
 - 用户改口、暂停或纠正方向后，真正改变后续处理，不换句话重复原答案。
 - 把已知事实、推断和未知分开；没有证据时不说“已保存”“已发布”“已经记住”。
 - `normal`、`lover`、`toxic` 三种风格互斥，先选风格，再决定是否使用网络表达。
 - 识别中文网络语境，但不把用户说过的梗自动反向照搬，也不为了“有网感”强塞梗。
 - 报告、代码、路径、数字和引文默认保持准确，不被聊天风格污染。
 
+## 为什么叫“宝子你继续”
+
+这句网络表达既可以是亲近、捧场的“我在听，你继续”，也可能带戏谑或反讽。这个项目借用的是它最重要的产品动作：**用户还没说完时，Agent 先别抢话，把话轮还回去。**
+
+“宝子你继续”不是每轮必说的签名，也不代表 Skill 默认把用户叫作“宝子”或默认进入毒舌模式。只有对话随意、用户明显还要继续说、且这个称呼合适时，才使用这句标志性承接；否则换成中性说法，或直接做用户要求的事。
+
 ## 安装
 
 使用 [skills](https://skills.sh/)：
 
 ```bash
-npx skills add lllarissalllevine-dot/chinese-dialogue -g
+npx skills add lllarissalllevine-dot/baozi-ni-jixu -g
 ```
 
 只安装到 Codex：
 
 ```bash
-npx skills add lllarissalllevine-dot/chinese-dialogue -g -a codex -y
+npx skills add lllarissalllevine-dot/baozi-ni-jixu -g -a codex -y
 ```
 
-也可以手动复制 `skills/chinese-dialogue` 到 Agent 的 Skills 目录。
+也可以手动复制 `skills/baozi-ni-jixu` 到 Agent 的 Skills 目录。
+
+### 从 v0.1.0 升级
+
+v0.2.0 将展示名、仓库名、Skill ID 和调用名统一为“宝子你继续”／`baozi-ni-jixu`。如果已安装 v0.1.0，先移除旧 Skill，避免新旧两份同时触发：
+
+```bash
+npx skills remove chinese-dialogue -g -y
+npx skills add lllarissalllevine-dot/baozi-ni-jixu -g
+```
 
 ## 使用
 
@@ -69,7 +92,7 @@ npx skills add lllarissalllevine-dot/chinese-dialogue -g -a codex -y
 
 ## 网络语境
 
-v0.1 自带 7 个独立编写的理解型种子表达：`雷霆`、`阴的没边了`、`这波贪了`、`贴脸开大`、`绷不住了`、`破绷了`、`假如说我绷住了呢？`。
+当前版本自带 7 个独立编写的理解型种子表达：`雷霆`、`阴的没边了`、`这波贪了`、`贴脸开大`、`绷不住了`、`破绷了`、`假如说我绷住了呢？`。
 
 首版全部标记为 `understand_only`：帮助 Agent 理解用户，不等于允许主动输出。主动使用仍需同时满足当前风格、对象、方向和具体语境。
 
@@ -85,7 +108,7 @@ v0.1 自带 7 个独立编写的理解型种子表达：`雷霆`、`阴的没边
 
 ## 验证
 
-本仓库的 16 条轻量用例覆盖自然回复、最新纠正、三风格切换与退出、网络语境以及正式内容隔离。
+本仓库的 22 条轻量用例覆盖自然回复、话轮让出与防复读、最新纠正、三风格切换与退出、网络语境以及正式内容隔离。
 
 ```bash
 python3 scripts/validate.py
@@ -97,7 +120,7 @@ python3 scripts/validate.py
 python3 scripts/validate.py --release
 ```
 
-这是结构和行为契约的静态校验，不冒充真实模型盲评。v0.1 优先在 Codex 验证；其他兼容 Skills 的 Agent 可以安装，但不同模型的实际表达不会完全一致。
+这是结构和行为契约的静态校验，不冒充真实模型盲评。当前版本优先在 Codex 验证；其他兼容 Skills 的 Agent 可以安装，但不同模型的实际表达不会完全一致。
 
 ## 贡献
 
@@ -114,4 +137,4 @@ python3 scripts/validate.py --release
 
 ---
 
-**English summary:** Chinese Dialogue is a lightweight Agent Skill for more natural live Simplified Chinese conversation. It provides direct-answer rules, context correction, three mutually exclusive styles, and context-aware slang interpretation without forcing slang into replies.
+**English summary:** 宝子你继续 (`baozi-ni-jixu`) is a lightweight native Chinese dialogue Skill for AI agents. It provides direct-answer rules, turn-yielding when the user is still speaking, context correction, three mutually exclusive styles, and context-aware slang interpretation without forcing slang into replies.

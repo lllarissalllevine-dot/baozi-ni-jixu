@@ -1,7 +1,7 @@
 {
   "schema_version": "chinese-dialogue-slang-starter-v1",
   "updated_at": "2026-08-28",
-  "policy": "All v0.1 entries are understanding aids, not proactive output permission.",
+  "policy": "All starter entries are understanding aids, not proactive output permission.",
   "entries": [
     {
       "id": "starter-001",
