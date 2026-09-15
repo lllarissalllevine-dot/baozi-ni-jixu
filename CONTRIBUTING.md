@@ -1,20 +1,21 @@
 # Contributing
 
-当前版本只收两类贡献：翻车回复和网络表达。小而具体的证据比大量孤立词条更有价值。
+当前仓库包含“宝子你继续”“我的妈呀大姐”“柏拉图”三个独立 Skill。优先收两类贡献：翻车回复和网络表达。小而具体的证据比大量孤立词条更有价值。
 
 ## 提交翻车回复
 
-请使用 `Bad Chinese reply` Issue 模板，并提供：
+请使用 <code>Bad Chinese reply</code> Issue 模板，并提供：
 
 - 用户当时真正要什么；
+- 当时安装或明确开启了哪个 Skill；
 - 必要且已经脱敏的上下文；
 - Agent 的原回复或等义改写；
-- 具体哪里不自然、接错或假装完成；
+- 具体哪里不自然、接错、串线或假装完成；
 - 你期待的处理方向，而不是强制唯一文案。
 
 ## 提交网络表达
 
-请使用 `New expression` Issue 模板，并尽量说明：
+请使用 <code>New expression</code> Issue 模板，并尽量说明：
 
 - 表达及常见变体；
 - 大致含义；
@@ -22,7 +23,9 @@
 - 适合和不适合的语境；
 - 是否只应理解，还是有证据支持 Agent 主动使用。
 
-默认从 `understand_only` 开始。出现过、流行过或用户先说过，都不自动等于 Agent 主动说出来会自然。
+默认从 <code>understand_only</code> 开始。出现过、流行过或用户先说过，都不自动等于 Agent 主动说出来会自然。
+
+三个 Skill 必须保持同一份网络语境参考和种子数据。修改其中一份时同步更新另外两份；验证器会拒绝内容漂移。
 
 ## 隐私与来源
 
@@ -33,10 +36,10 @@
 
 ## Pull request
 
-修改 Skill 规则时，请同时补充或调整 `tests/cases.json` 中能暴露该问题的最小用例，并运行：
+修改 Skill 规则时，请同时补充或调整 <code>tests/cases.json</code> 中能暴露该问题的最小路由或行为用例，并运行：
 
-```bash
+~~~bash
 python3 scripts/validate.py
-```
+~~~
 
-保持核心 `SKILL.md` 简短。只有切换风格或遇到网络语境时才需要的细节，应放进对应 `references/` 或 `data/` 文件。
+保持各自的 <code>SKILL.md</code> 简短且自包含，不要跨 Skill 目录引用文件。只有遇到网络语境时才需要的细节，应放进当前 Skill 自己的 <code>references/</code> 或 <code>data/</code> 文件。

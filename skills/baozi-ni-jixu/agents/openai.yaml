@@ -1,6 +1,6 @@
 interface:
   display_name: "宝子你继续"
-  short_description: "让 Agent 会接话、会让出话轮，懂梗但不硬玩梗"
+  short_description: "让实时中文对话更自然，听懂上下文，也知道什么时候别抢话"
   default_prompt: "Use $baozi-ni-jixu to reply naturally in this live Simplified Chinese conversation."
 
 policy:

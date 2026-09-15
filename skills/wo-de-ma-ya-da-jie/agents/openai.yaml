@@ -1,0 +1,7 @@
+interface:
+  display_name: "我的妈呀大姐"
+  short_description: "明确开启后再进入毒舌风格，吐槽说中问题，同时把正事办完"
+  default_prompt: "Use $wo-de-ma-ya-da-jie to give a sharp, funny, task-completing Simplified Chinese reply."
+
+policy:
+  allow_implicit_invocation: true

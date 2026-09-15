@@ -2,134 +2,182 @@
 
 > 别让 Agent 像客服，也别让它抢话。
 
-一个给 AI Agent 的中文原生对话层：让 Codex 等通用 Agent 在实时简体中文对话里更自然、直接、懂上下文；不复述，不端着，不假装做完；懂梗，但不硬玩梗。
+一个面向 AI Agent 的中文原生对话仓库。现在包含三个可以单独安装的 Skill；它们共用网络语境底座，并通过同一套路由协议约定单轮只采用一种风格。
 
-**Native Chinese dialogue layer for AI agents.**
+**Native Chinese dialogue Skills for AI agents.**
 
-```text
-用户：等等，我还没说完。
-Agent：宝子你继续。
-```
+![三个独立 Skill](assets/three-skills.svg)
 
-![同一句话的三种对话风格](assets/three-modes.svg)
+## 三个独立 Skill
 
-图中是缩写示意，完整示例见下表。
+### 宝子你继续
 
-同一个问题：`来，陪我玩个二选一：手机内存不够，删你还是删短视频？`
+> 正常聊天时用。它会先听懂你这一轮到底要什么，该回答就回答；你还没说完时，它知道先把话轮还给你。
 
-| 风格 | 一次受控合成开发运行中的示例输出 |
+- Skill ID：<code>baozi-ni-jixu</code>
+- 目录：<code>skills/baozi-ni-jixu</code>
+
+### 我的妈呀大姐
+
+> 想要毒舌、吐槽或锐评时再开。它可以说得狠，但得先说中问题，还得把你交代的正事办完。
+
+- Skill ID：<code>wo-de-ma-ya-da-jie</code>
+- 目录：<code>skills/wo-de-ma-ya-da-jie</code>
+
+### 柏拉图
+
+> 想要更温柔、亲近、带点恋爱感时再开。它会回应眼前的具体细节和情绪，但不会假装拥有现实关系或共同记忆。
+
+- Skill ID：<code>plato</code>
+- 目录：<code>skills/plato</code>
+
+## 为什么拆开
+
+旧版本把普通、毒舌和恋爱放在一个 Skill 里，安装简单，但默认触发范围太宽，也容易让普通聊天显得机械。
+
+现在三者是同一仓库里的独立产品：
+
+- 用户可以只安装自己需要的一个；
+- 每条用户可见回复只由一个 Skill 决定表达；
+- 本轮最新的明确选择优先；
+- 特殊风格退出后，即使“宝子你继续”没有安装，也能回到宿主模型的中性表达；
+- 看不到目标 Skill 的安装或调用状态时，不谎称已经切换成功。
+
+平台当前没有跨 Skill 的硬互斥开关，所以本仓库用一致的路由协议和公开测试防止串线。这是行为契约，不冒充宿主层的绝对锁。
+
+## 同一个问题，三种独立回复
+
+用户：<code>来，陪我玩个二选一：手机内存不够，删你还是删短视频？</code>
+
+| 当前 Skill | 示例回复 |
 |---|---|
-| `normal` | 删短视频吧。它吃内存还吃时间，我至少还能陪你把这道二选一玩完。 |
-| `lover` | 删短视频呀，宝贝。它占内存，我只占你这一会儿注意力——这票怎么也该留给我吧。 |
-| `toxic` | 删短视频。它吃内存还吃时间，我至少只吃问题。非要选我也行，这道二选一就算你主动交了张错卷。 |
+| 宝子你继续 | 删短视频。它占内存，我只占你一点注意力。 |
+| 我的妈呀大姐 | 删短视频。手机内存都拉响警报了，你还在给电子瓜子争取编制？删我只能腾点空间，删短视频还能顺手抢救一下你那被上下滑切成薯片的注意力。 |
+| 柏拉图 | 删短视频。它不光占内存，还偷时间；我占的那点地方，至少还能陪你做正事、陪你胡闹。<br><br>实在不够就先清缓存——别动我，听见没？ |
 
-这些示例选自项目内部的一次受控合成开发运行，用来展示三条生成路线的差别；它不是公开盲评或可复现基准，也不是对所有模型和每次输出的保证。
-
-## 它解决什么
-
-- 第一段先给答案、判断或动作，不先复述问题和宣布结构。
-- 用户明显还没说完时，不抢着分析或收尾，而是简短接住并把话轮还给用户。
-- 用户改口、暂停或纠正方向后，真正改变后续处理，不换句话重复原答案。
-- 把已知事实、推断和未知分开；没有证据时不说“已保存”“已发布”“已经记住”。
-- `normal`、`lover`、`toxic` 三种风格互斥，先选风格，再决定是否使用网络表达。
-- 识别中文网络语境，但不把用户说过的梗自动反向照搬，也不为了“有网感”强塞梗。
-- 报告、代码、路径、数字和引文默认保持准确，不被聊天风格污染。
-
-## 为什么叫“宝子你继续”
-
-这句网络表达既可以是亲近、捧场的“我在听，你继续”，也可能带戏谑或反讽。这个项目借用的是它最重要的产品动作：**用户还没说完时，Agent 先别抢话，把话轮还回去。**
-
-“宝子你继续”不是每轮必说的签名，也不代表 Skill 默认把用户叫作“宝子”或默认进入毒舌模式。只有对话随意、用户明显还要继续说、且这个称呼合适时，才使用这句标志性承接；否则换成中性说法，或直接做用户要求的事。
+这些回复来自三个独立 Skill 的一次隔离前向测试。每个评测 Agent 只读取对应 Skill，再分别回答同一个问题；它们没有读取 README 或预期答案。这只是一次发布前样本，不是公开盲评，也不保证所有模型每次都输出同样的句子。
 
 ## 安装
 
-使用 [skills](https://skills.sh/)：
+以下命令使用 [skills CLI](https://github.com/vercel-labs/skills)。多 Skill 仓库应使用空格分隔的 <code>--skill name</code>，不要写成 <code>--skill=name</code>。
 
-```bash
-npx skills add lllarissalllevine-dot/baozi-ni-jixu -g
-```
+只安装“宝子你继续”：
 
-只安装到 Codex：
+~~~bash
+npx skills add lllarissalllevine-dot/baozi-ni-jixu --skill baozi-ni-jixu -g -a codex -y
+~~~
 
-```bash
-npx skills add lllarissalllevine-dot/baozi-ni-jixu -g -a codex -y
-```
+只安装“我的妈呀大姐”：
 
-也可以手动复制 `skills/baozi-ni-jixu` 到 Agent 的 Skills 目录。
+~~~bash
+npx skills add lllarissalllevine-dot/baozi-ni-jixu --skill wo-de-ma-ya-da-jie -g -a codex -y
+~~~
 
-### 从 v0.1.0 升级
+只安装“柏拉图”：
 
-v0.2.0 将展示名、仓库名、Skill ID 和调用名统一为“宝子你继续”／`baozi-ni-jixu`。如果已安装 v0.1.0，先移除旧 Skill，避免新旧两份同时触发：
+~~~bash
+npx skills add lllarissalllevine-dot/baozi-ni-jixu --skill plato -g -a codex -y
+~~~
 
-```bash
-npx skills remove chinese-dialogue -g -y
-npx skills add lllarissalllevine-dot/baozi-ni-jixu -g
-```
+三个全部安装：
+
+~~~bash
+npx skills add lllarissalllevine-dot/baozi-ni-jixu \
+  --skill baozi-ni-jixu \
+  --skill wo-de-ma-ya-da-jie \
+  --skill plato \
+  -g -a codex -y
+~~~
+
+也可以手动复制目标 Skill 目录到 Agent 的 Skills 目录。三个 Skill 都是自包含包，不依赖另一个 Skill 的相对路径。
 
 ## 使用
 
-安装后照常说中文即可。需要切换风格时，直接说：
+“宝子你继续”处理普通中文对话，也负责用户明确要求恢复正常说话的场景。
 
-```text
-打开恋人模式
-切到毒舌模式
-轻一点
+“我的妈呀大姐”和“柏拉图”只在用户明确调用、明确开启对应表达，或当前可见会话已经开启且尚未退出时生效。它们的名字被当作感叹、哲学家或引用内容时，不应误触发。
+
+示例：
+
+~~~text
+用我的妈呀大姐吐槽这个方案
+切到柏拉图
 正常说话
-```
+~~~
 
-默认是 `normal`。`lover` 和 `toxic` 只在用户明确开启后生效；明确退出立即回到 `normal`。没有真实持久化接口时，Skill 不会冒充自己已经跨会话记住偏好。
+用户同一轮无先后地要求混合两种特殊风格时，Agent 只追问要选哪个。用户明确要做效果对比时，可以输出分别标注的样例，但不代表同时开启。
 
-## 为什么不是一段提示词
+## 为什么不只写一段提示词
 
-一段写得足够长的提示词，当然可以在单次对话里逼近部分效果。这个项目的价值不在“藏了一句神奇咒语”，而在把容易漂移的行为变成可安装、可检查、可继续贡献的产品层：
+一段足够长的提示词，可以在单次对话里逼近部分效果。本仓库解决的是重复使用和后续维护：
 
-1. 核心规则随 Skill 自动进入需要它的中文对话，不必每次重贴长提示词。
-2. 风格、网络语境和种子数据分层加载，核心上下文保持短小。
-3. 模式切换、退出、精确内容和假完成等行为有公开测试契约，不只靠演示截图。
-4. 新梗和翻车回复可以独立投稿，不必重写整个 Skill。
+- 三种表达可以分别安装，不需要每轮把三套规则一起塞进上下文；
+- 触发、切换、退出、误触发和精确内容保护都有公开测试；
+- 网络表达与核心规则分开维护，新增一个梗不需要重写整个 Skill；
+- 翻车回复可以变成回归用例，而不是下次继续碰运气。
 
-它不会神奇地提高基础模型的知识上限，也不保证击败为单个问题精心调过的超长提示词。它解决的是跨对话复用、一致性和维护成本。
+它不会提高基础模型的知识上限，也不保证胜过为单个问题专门调过的长提示词。
 
 ## 网络语境
 
-当前版本自带 7 个独立编写的理解型种子表达：`雷霆`、`阴的没边了`、`这波贪了`、`贴脸开大`、`绷不住了`、`破绷了`、`假如说我绷住了呢？`。
+三个 Skill 各自携带同一份网络语境参考和七个理解型种子表达：雷霆、阴的没边了、这波贪了、贴脸开大、绷不住了、破绷了、假如说我绷住了呢？
 
-首版全部标记为 `understand_only`：帮助 Agent 理解用户，不等于允许主动输出。主动使用仍需同时满足当前风格、对象、方向和具体语境。
+首版种子全部是 <code>understand_only</code>：帮助理解，不等于允许主动输出。验证器会检查三个副本完全一致，避免独立安装后能力漂移。
 
-网络语言的字段设计与评测思路参考了 CHIME；本仓库不打包或再分发 CHIME 数据。详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+字段设计与评测思路参考了 CHIME；本仓库不打包或再分发 CHIME 数据。详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+## Token 与独立安装
+
+Skill 的名称和技术触发说明先参与选择，只有命中的 Skill 主体才需要进入上下文。拆分后，普通对话不再同时加载毒舌和恋爱正文；网络语境参考也只在真正遇到相关表达时读取。
+
+复制三份网络语境文件会增加少量磁盘体积，但不会让三个正文在每轮一起进入上下文。这个取舍换来每个 Skill 可以真正独立安装。
+
+## 从旧版升级
+
+v0.2.0 把普通、毒舌和恋爱放在同一个 <code>baozi-ni-jixu</code> Skill 中。从 v0.3.0 起，同名 Skill 只负责普通中文对话；毒舌和恋爱分别由“我的妈呀大姐”和“柏拉图”负责。
+
+已经安装 v0.2.0 的用户，先用明确的仓库来源重新安装“宝子你继续”。这也适用于旧安装没有保存来源记录、无法使用 <code>skills update</code> 的情况：
+
+~~~bash
+npx skills add lllarissalllevine-dot/baozi-ni-jixu --skill baozi-ni-jixu -g -a codex -y
+~~~
+
+然后按需要安装另外两个 Skill。只想保留普通风格时，不需要安装它们。如果仍保留 v0.1.0 的 <code>chinese-dialogue</code>，请先移除旧 Skill，避免旧总路由和新 Skill 同时触发：
+
+~~~bash
+npx skills remove chinese-dialogue -g -y
+~~~
+
+## 验证
+
+公开契约目前覆盖独立触发、名称误触发、双向切换、退出、缺失目标、网络语境、正式内容隔离和高风险信号。
+
+~~~bash
+python3 scripts/validate.py
+~~~
+
+发布校验还会阻止占位文案、草稿标记和无效安装信息进入正式版本：
+
+~~~bash
+python3 scripts/validate.py --release
+~~~
+
+这是结构和行为契约的静态校验，不冒充真实模型盲评。最终表达仍需隔离模型测试。
+
+## GitHub 迭代报告
+
+技术决策、验证结果和踩坑日志见 [docs/GITHUB-REPORT.md](docs/GITHUB-REPORT.md)。报告只记录真实发生的问题、根因和处理，不把推测写成结论。
+
+## 贡献
+
+最有价值的贡献是能复现的翻车回复和带语境的网络表达。请看 [CONTRIBUTING.md](CONTRIBUTING.md)，不要直接上传私人聊天截图、账号、链接或可搜索原句。
 
 ## 它不做什么
 
 - 不提供跨设备、跨账号或跨 Agent 的真实偏好持久化。
-- 不内置联网热榜，也不宣称七个种子表达代表当前完整流行趋势。
+- 不内置联网热榜，也不宣称七个种子表达代表完整流行趋势。
 - 不复制豆包等产品的专有源码、私有数据或受保护资产。
 - 不替代基础模型的事实能力、工具权限和安全机制。
-- 不把正式文档统一“口语化”；它面向实时中文对话，不是通用文案润色器。
-
-## 验证
-
-本仓库的 22 条轻量用例覆盖自然回复、话轮让出与防复读、最新纠正、三风格切换与退出、网络语境以及正式内容隔离。
-
-```bash
-python3 scripts/validate.py
-```
-
-发布校验会额外检查安装命令是否仍有占位符：
-
-```bash
-python3 scripts/validate.py --release
-```
-
-这是结构和行为契约的静态校验，不冒充真实模型盲评。当前版本优先在 Codex 验证；其他兼容 Skills 的 Agent 可以安装，但不同模型的实际表达不会完全一致。
-
-## 贡献
-
-最有价值的贡献不是堆词量，而是两类可复现材料：
-
-- 某条中文回复为什么“像客服”或接错了上下文；
-- 某个网络表达在什么语境、对象和方向下成立或翻车。
-
-请看 [CONTRIBUTING.md](CONTRIBUTING.md)。不要直接上传私人聊天截图、账号、链接或可搜索原句。
 
 ## License
 
@@ -137,4 +185,4 @@ python3 scripts/validate.py --release
 
 ---
 
-**English summary:** 宝子你继续 (`baozi-ni-jixu`) is a lightweight native Chinese dialogue Skill for AI agents. It provides direct-answer rules, turn-yielding when the user is still speaking, context correction, three mutually exclusive styles, and context-aware slang interpretation without forcing slang into replies.
+**English summary:** This repository contains three independently installable Simplified Chinese dialogue Skills: <code>baozi-ni-jixu</code>, <code>wo-de-ma-ya-da-jie</code>, and <code>plato</code>. Only one should control the tone of a user-visible reply at a time.

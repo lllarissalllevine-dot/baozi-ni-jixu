@@ -9,6 +9,14 @@ body:
       description: 用一句话说明正确任务或意图。
     validations:
       required: true
+  - type: input
+    id: skill
+    attributes:
+      label: 涉及的 Skill
+      description: 写明当时安装或明确开启的是宝子你继续、我的妈呀大姐、柏拉图，还是无法确认。
+      placeholder: 例如：我的妈呀大姐（wo-de-ma-ya-da-jie）
+    validations:
+      required: true
   - type: textarea
     id: context
     attributes:
